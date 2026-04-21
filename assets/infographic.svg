@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" width="900" height="640" role="img" aria-labelledby="title desc">
+  <title id="title">Llama Stack Showcase Architecture</title>
+  <desc id="desc">Infographic showing three Gradio tabs (Research, Code, Pipeline), the tools each uses, and the LlamaStackClient bridging to Together AI Llama-4-Scout-17B.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="titleBar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#312e81"/>
+      <stop offset="100%" stop-color="#4338ca"/>
+    </linearGradient>
+    <linearGradient id="cardResearch" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e0e7ff"/>
+      <stop offset="100%" stop-color="#c7d2fe"/>
+    </linearGradient>
+    <linearGradient id="cardCode" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d1fae5"/>
+      <stop offset="100%" stop-color="#a7f3d0"/>
+    </linearGradient>
+    <linearGradient id="cardPipeline" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="100%" stop-color="#fde68a"/>
+    </linearGradient>
+    <linearGradient id="toolGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="clientGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+    <linearGradient id="togetherGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#be185d"/>
+      <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="3" result="off"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.25"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- background -->
+  <rect width="900" height="640" fill="url(#bg)"/>
+
+  <!-- title bar -->
+  <g filter="url(#soft)">
+    <rect x="30" y="24" width="840" height="78" rx="16" fill="url(#titleBar)"/>
+  </g>
+  <text x="60" y="62" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#ffffff">🦙 Llama Stack Showcase</text>
+  <text x="60" y="88" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="14" fill="#c7d2fe">Together AI · Llama-4-Scout-17B</text>
+  <g transform="translate(740,50)">
+    <rect x="0" y="0" width="110" height="32" rx="16" fill="#ffffff" opacity="0.15"/>
+    <text x="55" y="21" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#ffffff">Gradio UI</text>
+  </g>
+
+  <!-- section label: Tabs -->
+  <text x="60" y="142" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2" fill="#475569">TABS · AGENTS</text>
+  <line x1="200" y1="138" x2="840" y2="138" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Research Card -->
+  <g filter="url(#soft)">
+    <rect x="50" y="160" width="250" height="140" rx="18" fill="url(#cardResearch)" stroke="#6366f1" stroke-width="1.5"/>
+  </g>
+  <text x="74" y="196" font-family="Segoe UI, Arial, sans-serif" font-size="22">🔍</text>
+  <text x="108" y="198" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#1e1b4b">Research</text>
+  <text x="74" y="228" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#3730a3">ResearchAgent</text>
+  <line x1="74" y1="240" x2="276" y2="240" stroke="#6366f1" stroke-width="0.8" opacity="0.4"/>
+  <text x="74" y="262" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1e293b">Web search &amp; synthesis</text>
+  <text x="74" y="282" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#475569">DuckDuckGo-powered answers</text>
+
+  <!-- Code Card -->
+  <g filter="url(#soft)">
+    <rect x="325" y="160" width="250" height="140" rx="18" fill="url(#cardCode)" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <text x="349" y="196" font-family="Segoe UI, Arial, sans-serif" font-size="22">💻</text>
+  <text x="383" y="198" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#064e3b">Code</text>
+  <text x="349" y="228" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#047857">CodeGenerationAgent</text>
+  <line x1="349" y1="240" x2="551" y2="240" stroke="#10b981" stroke-width="0.8" opacity="0.4"/>
+  <text x="349" y="262" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1e293b">Generate · Execute · Self-correct</text>
+  <text x="349" y="282" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#475569">Sandboxed Python runs</text>
+
+  <!-- Pipeline Card -->
+  <g filter="url(#soft)">
+    <rect x="600" y="160" width="250" height="140" rx="18" fill="url(#cardPipeline)" stroke="#d97706" stroke-width="1.5"/>
+  </g>
+  <text x="624" y="196" font-family="Segoe UI, Arial, sans-serif" font-size="22">🔄</text>
+  <text x="658" y="198" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#78350f">Pipeline</text>
+  <text x="624" y="228" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#92400e">PipelineAgent</text>
+  <line x1="624" y1="240" x2="826" y2="240" stroke="#d97706" stroke-width="0.8" opacity="0.4"/>
+  <text x="624" y="262" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1e293b">Search → Code → Execute</text>
+  <text x="624" y="282" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#475569">End-to-end composed workflow</text>
+
+  <!-- section label: Tools -->
+  <text x="60" y="348" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2" fill="#475569">TOOLS</text>
+  <line x1="110" y1="344" x2="840" y2="344" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Arrows: Research -> WebSearchTool -->
+  <path d="M 175 300 C 175 340, 160 350, 160 380" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)" opacity="0.75"/>
+  <!-- Research -> FileIOTool (dashed) -->
+  <path d="M 220 300 C 260 340, 380 360, 430 380" fill="none" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)" opacity="0.6"/>
+
+  <!-- Code -> ExecutionTool -->
+  <path d="M 450 300 C 450 340, 450 350, 450 380" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)" opacity="0.75"/>
+  <!-- Code -> FileIOTool -->
+  <path d="M 420 300 C 420 340, 430 350, 440 378" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)" opacity="0.6"/>
+
+  <!-- Pipeline -> all 3 -->
+  <path d="M 700 300 C 640 340, 280 360, 200 380" fill="none" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)" opacity="0.55"/>
+  <path d="M 720 300 C 700 340, 500 360, 470 380" fill="none" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)" opacity="0.55"/>
+  <path d="M 740 300 C 740 340, 740 350, 740 380" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)" opacity="0.75"/>
+
+  <!-- Tool: WebSearchTool -->
+  <g filter="url(#soft)">
+    <rect x="70" y="380" width="180" height="70" rx="12" fill="url(#toolGrad)" stroke="#6366f1" stroke-width="1.2"/>
+  </g>
+  <circle cx="100" cy="415" r="14" fill="#6366f1" opacity="0.15"/>
+  <text x="100" y="421" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16">🌐</text>
+  <text x="125" y="410" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#1e293b">WebSearchTool</text>
+  <text x="125" y="430" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b">DuckDuckGo queries</text>
+
+  <!-- Tool: ExecutionTool -->
+  <g filter="url(#soft)">
+    <rect x="360" y="380" width="180" height="70" rx="12" fill="url(#toolGrad)" stroke="#10b981" stroke-width="1.2"/>
+  </g>
+  <circle cx="390" cy="415" r="14" fill="#10b981" opacity="0.15"/>
+  <text x="390" y="421" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16">⚙️</text>
+  <text x="415" y="410" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#1e293b">ExecutionTool</text>
+  <text x="415" y="430" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b">Sandboxed code runs</text>
+
+  <!-- Tool: FileIOTool -->
+  <g filter="url(#soft)">
+    <rect x="650" y="380" width="180" height="70" rx="12" fill="url(#toolGrad)" stroke="#d97706" stroke-width="1.2"/>
+  </g>
+  <circle cx="680" cy="415" r="14" fill="#d97706" opacity="0.15"/>
+  <text x="680" y="421" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16">📁</text>
+  <text x="705" y="410" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#1e293b">FileIOTool</text>
+  <text x="705" y="430" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b">Read / write workspace</text>
+
+  <!-- connectors to LlamaStackClient -->
+  <path d="M 160 450 C 160 490, 450 490, 450 500" fill="none" stroke="#94a3b8" stroke-width="1.2" opacity="0.6"/>
+  <path d="M 450 450 L 450 500" fill="none" stroke="#94a3b8" stroke-width="1.2" opacity="0.6"/>
+  <path d="M 740 450 C 740 490, 450 490, 450 500" fill="none" stroke="#94a3b8" stroke-width="1.2" opacity="0.6"/>
+
+  <!-- LlamaStackClient -->
+  <g filter="url(#soft)">
+    <rect x="150" y="498" width="600" height="58" rx="14" fill="url(#clientGrad)"/>
+  </g>
+  <text x="450" y="524" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">🦙  LlamaStackClient</text>
+  <text x="450" y="544" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#ccfbf1">Unified agent · tool · inference orchestration</text>
+
+  <!-- arrow to Together AI -->
+  <path d="M 450 556 L 450 585" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Together AI pill -->
+  <g filter="url(#soft)">
+    <rect x="300" y="588" width="300" height="38" rx="19" fill="url(#togetherGrad)"/>
+  </g>
+  <text x="450" y="613" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#ffffff">Together AI  ·  Llama-4-Scout-17B-16E-Instruct</text>
+
+  <!-- legend -->
+  <g transform="translate(60,108)">
+    <circle cx="0" cy="0" r="4" fill="#6366f1"/>
+    <text x="10" y="4" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#475569">Research</text>
+    <circle cx="80" cy="0" r="4" fill="#10b981"/>
+    <text x="90" y="4" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#475569">Code</text>
+    <circle cx="140" cy="0" r="4" fill="#d97706"/>
+    <text x="150" y="4" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#475569">Pipeline</text>
+  </g>
+</svg>

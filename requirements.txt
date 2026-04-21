@@ -1,0 +1,26 @@
+# Llama Stack
+llama-stack>=0.7.1
+llama-stack-client>=0.7.2
+
+# Web Framework
+gradio>=6.13.0
+
+# Search (ddgs is the renamed package; duckduckgo-search kept as fallback)
+ddgs>=9.0.0
+duckduckgo-search>=8.1.1
+
+# OpenAI-compatible client (Together AI)
+openai>=1.40.0
+
+# HTTP Client
+requests>=2.32.0
+
+# Environment
+python-dotenv>=1.2.0
+
+# CLI & UI
+rich>=15.0.0
+click>=8.1.0
+
+# Additional utilities
+markdown>=3.7
