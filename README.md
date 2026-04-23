@@ -1,214 +1,189 @@
-# 🦙 Llama Stack Showcase
+# Llama Stack Showcase
 
-> 🤖 **Autonomously built using [NEO](https://heyneo.com) — Your Autonomous AI Engineering Agent**
->
-> [![VS Code Extension](https://img.shields.io/badge/VS%20Code-NEO%20Extension-007ACC?logo=visual-studio-code&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=NeoResearchInc.heyneo) [![Cursor Extension](https://img.shields.io/badge/Cursor-NEO%20Extension-000000?logo=cursor&logoColor=white)](https://marketplace.cursorapi.com/items/?itemName=NeoResearchInc.heyneo)
+![Infographic](assets/infographic.svg)
 
-<p align="center">
-  <img src="assets/infographic.svg" alt="Llama Stack Showcase Architecture" width="820" />
-</p>
-
-Interactive agents powered by Meta's Llama-4-Scout via Together AI, featuring live log streaming and real-time execution visualization.
-
-## ✨ New Features
-
-### 1. Conversation History & Export
-
-Every run from the Research, Code, and Pipeline tabs is automatically recorded to an in-memory, FIFO-capped (50 entries) history. A new **📋 History** tab shows the scrollable list and lets you export all entries to a JSON file with one click.
-
-In the UI, open the **📋 History** tab and click **⬇️ Download JSON** to save the file, or **🗑️ Clear History** to reset.
-
-### 2. Per-Run Model + Temperature Selection
-
-Each agent tab now has a **⚙️ Model & Temperature** accordion with:
-
-- **Model dropdown** (default `meta-llama/Llama-4-Scout-17B-16E-Instruct`, plus `Llama-3.3-70B-Instruct-Turbo` and `Llama-3.1-8B-Instruct-Turbo`)
-- **Temperature slider** (0.0 – 1.5, step 0.1, default 0.7)
-
-A fresh `LlamaStackClient(model=..., temperature=...)` is constructed per run, so you can switch models mid-session without restarting the app.
-
----
+An end-to-end demonstration of Meta's `llama-stack` deployment and agent framework, wired to Llama 4 Scout (via Together AI or OpenRouter) and driving three real, tool-using agents behind a streaming Gradio UI.
 
 ## Overview
 
-This project demonstrates agentic workflows using the Llama Stack framework with Together AI's Llama-4-Scout model. It includes three interactive agents:
+Meta's [llama-stack](https://github.com/meta-llama/llama-stack) is the official unified deployment and agent stack for the Llama 4 family. This project is a complete, working showcase: it wires a Llama 4 Scout endpoint to three tools (web search, sandboxed Python execution, local file I/O) and runs multi-step agentic workflows from start to finish. Everything is exposed through a Gradio UI with live, per-step log streaming — so you can see each tool call, each model reasoning step, and the final result as it is produced.
 
-- **🔍 Research Agent**: Web search and synthesis with DuckDuckGo
-- **💻 Code Agent**: Code generation with self-correction and execution
-- **🔄 Pipeline Agent**: Combined search + code execution workflow
+## Features
 
-All agents feature **live log streaming** to visualize each step in real-time.
+- **Three working agents**
+  - *Research Agent* — runs web searches via DuckDuckGo and synthesizes a structured report.
+  - *Code Generation Agent* — writes Python code for a natural-language task, executes it in a sandbox, and self-corrects up to three times on failure.
+  - *Full Pipeline Agent* — combines research and code execution to answer data-analysis questions end-to-end with code-backed evidence.
+- **Three real tools**
+  - `WebSearchTool` (DuckDuckGo, no key required).
+  - `CodeExecutionTool` (subprocess-isolated Python with a 10-second timeout and a dangerous-pattern denylist).
+  - `FileIOTool` (read/write constrained to a local `workspace/` folder).
+- **Streaming Gradio UI** with one tab per demo, a live log panel, and a formatted output panel.
+- **Provider-agnostic client** — defaults to OpenRouter, falls back to Together AI, with an optional local-model path (e.g. Ollama) via `LLAMA_LOCAL=1`.
+- **Fully tested** — 93 pytest cases covering tools, agents, client, UI construction, and history management.
 
-## Project Structure
+## Architecture
 
 ```
-llama-stack-showcase/
-├── src/
-│   ├── __init__.py
-│   ├── client.py          # LlamaStackClient for Together AI
-│   ├── ui.py              # Gradio UI with streaming support
-│   └── tools/
-│       ├── __init__.py
-│       ├── search.py      # DuckDuckGo web search
-│       ├── execute.py     # Safe code execution
-│       └── file_io.py     # Sandboxed file operations
-├── demos/
-│   ├── __init__.py
-│   ├── research_agent.py  # Research agent with generator interface
-│   ├── code_agent.py      # Code generation with self-correction
-│   └── pipeline_agent.py  # Combined pipeline agent
-├── docs/
-│   ├── ARCHITECTURE.md    # Architecture documentation
-│   ├── API.md            # API reference
-│   ├── demo_video_script.md
-│   └── huggingface-spaces.md
-├── app.py                # HuggingFace Spaces entry point
-├── requirements.txt
-├── .env.example
-└── README.md
+ ┌──────────────────────────────────────────────┐
+ │                 Gradio UI                     │
+ │   (src/ui.py — 3 tabs, streaming log panes)   │
+ └───────────────┬───────────────┬──────────────┘
+                 │               │
+        ┌────────┴──────┐  ┌─────┴─────────┐
+        │  Agents       │  │  Client       │
+        │  demos/       │  │  src/client.py│
+        │  - research   │  │  OpenAI-compat│
+        │  - code       │  │  OpenRouter / │
+        │  - pipeline   │  │  Together AI  │
+        └────┬──────────┘  └───────┬───────┘
+             │                     │
+        ┌────┴─────────────────────┴────┐
+        │             Tools              │
+        │   src/tools/                   │
+        │   - search.py  (DuckDuckGo)    │
+        │   - execute.py (sandboxed py)  │
+        │   - file_io.py (workspace/)    │
+        └────────────────────────────────┘
 ```
 
-## Setup Instructions
+Each agent exposes a generator-based `run()` method that yields `{"type": "log", ...}` events for every tool call and reasoning step, then a final `{"type": "result", ...}` event. This makes it trivial to stream progress into any UI.
 
-### 1. Clone and Install
+## Installation
+
+Requirements: Python 3.10+.
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/dakshjain-1616/llama-stack-showcase.git
 cd llama-stack-showcase
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
-```
 
-### 2. Configure Environment
-
-```bash
-# Copy environment template
 cp .env.example .env
-
-# Edit .env with your Together AI API key
-TOGETHER_API_KEY=your_api_key_here
-LLAMA_STACK_ENDPOINT=https://api.together.xyz/v1
-DEFAULT_MODEL=meta-llama/Llama-4-Scout-17B-16E-Instruct
+# edit .env with your API key (see API key setup below)
 ```
 
-### 3. Run Locally
+## API Key Setup
+
+The client is provider-agnostic and picks a backend based on which environment variables are set:
+
+| Provider    | Env var              | Default model                                      |
+|-------------|----------------------|----------------------------------------------------|
+| OpenRouter  | `OPENROUTER_API_KEY` | `meta-llama/llama-4-scout`                         |
+| Together AI | `TOGETHER_API_KEY`   | `meta-llama/Llama-4-Scout-17B-16E-Instruct`        |
+| Local       | `LLAMA_LOCAL=1`      | `llama3.2` on `http://localhost:11434/v1` (Ollama) |
+
+Optional overrides: `LLAMA_BASE_URL`, `LLAMA_MODEL`.
+
+To get a Together AI key, sign up at https://api.together.xyz and generate one at https://api.together.xyz/settings/api-keys.
+
+## Usage
+
+### Launch the Gradio UI
 
 ```bash
 python app.py
 ```
 
-The UI will be available at `http://localhost:7860`
+Then open http://localhost:7860. Each of the three tabs has an input box, a Run button, a live log stream, and a formatted result panel.
 
-## Llama Stack vs Direct API Comparison
+### Demo 1 — Research Agent
 
-| Feature | Llama Stack | Direct API |
-|---------|-------------|------------|
-| **Abstraction Level** | High-level agent framework | Low-level HTTP requests |
-| **Tool Integration** | Built-in tool calling | Manual implementation |
-| **Streaming** | Native generator support | Manual chunk handling |
-| **Safety** | Sandboxed execution | User-managed |
-| **Self-Correction** | Built-in iteration loops | Custom logic required |
-| **Setup Complexity** | Single client initialization | Manual auth, headers, parsing |
-| **Code Lines** | ~50 for full agent | ~200+ for equivalent |
+Runs web searches and synthesizes findings into a markdown report.
 
-**Recommendation**: Use Llama Stack for rapid agent development; use Direct API for fine-grained control.
+```python
+from demos.research_agent import create_research_agent
+from src.tools.search import create_search_tool
+from src.client import create_client
 
-## Usage Examples
-
-The Research, Code, and Pipeline agents are accessible through the Gradio UI tabs, each streaming live log events and yielding a final result.
-
-## Architecture
-
-The project follows a layered architecture:
-
-```
-┌─────────────────────────────────────────┐
-│           Gradio UI Layer             │
-│    (src/ui.py - Streaming Interface)   │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│          Agent Layer                  │
-│  (demos/research_agent.py, etc.)      │
-│  - Generator interfaces               │
-│  - Step event yielding                │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│          Client Layer                 │
-│    (src/client.py - Together AI)      │
-│  - Llama-4-Scout integration          │
-│  - Tool calling support                 │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│          Tools Layer                  │
-│  (src/tools/search.py, etc.)          │
-│  - DuckDuckGo search                  │
-│  - Code execution (sandboxed)         │
-│  - File I/O (workspace only)          │
-└─────────────────────────────────────────┘
+agent = create_research_agent(
+    client=create_client(),
+    search_tool=create_search_tool(),
+)
+for event in agent.run("What is llama-stack?"):
+    print(event)
 ```
 
-### Streaming Flow
+### Demo 2 — Code Generation and Execution Agent
 
-1. **User Input** → Gradio UI captures query
-2. **Agent.run()** → Generator yields step events
-3. **Log Callback** → Each step logs to streaming textbox
-4. **Tool Execution** → Tools log their operations
-5. **Final Result** → Formatted output displayed
+Generates Python code for a task, runs it in the sandbox, and self-corrects up to three times on failure.
 
-## Deployment
+```python
+from demos.code_agent import create_code_agent
+from src.tools.execute import create_execution_tool
+from src.client import create_client
 
-### HuggingFace Spaces
+agent = create_code_agent(
+    client=create_client(),
+    execution_tool=create_execution_tool(),
+)
+for event in agent.run("Compute the 20th Fibonacci number"):
+    print(event)
+```
 
-1. Create a new Space at [huggingface.co/spaces](https://huggingface.co/spaces)
-2. Select "Gradio" as the SDK
-3. Upload files or connect GitHub repository
-4. Set environment variable `TOGETHER_API_KEY` in Space settings
-5. Deploy!
+### Demo 3 — Full Pipeline Agent
 
-See `docs/huggingface-spaces.md` for detailed instructions.
+Takes a data-analysis question, searches for context, writes code, executes it, and produces a final answer with the code and output as evidence.
 
-### GitHub Repository
+```python
+from demos.pipeline_agent import create_pipeline_agent
+from src.client import create_client
+from src.tools.search import create_search_tool
+from src.tools.execute import create_execution_tool
+
+agent = create_pipeline_agent(
+    client=create_client(),
+    search_tool=create_search_tool(),
+    execution_tool=create_execution_tool(),
+)
+for event in agent.run("What is the average of the first 100 primes?"):
+    print(event)
+```
+
+### Running the test suite
 
 ```bash
-# Initialize git
-git init
-git add .
-git commit -m "Initial commit: Llama Stack Showcase"
-
-# Add remote and push
-git remote add origin <your-repo-url>
-git push -u origin main
+pytest -v
 ```
 
-## Environment Variables
+All 93 tests run without an API key — the agents fall back to mock reasoning paths when no client is supplied.
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `TOGETHER_API_KEY` | Together AI API key | Yes |
-| `LLAMA_STACK_ENDPOINT` | API endpoint URL | No (default: https://api.together.xyz/v1) |
-| `DEFAULT_MODEL` | Model identifier | No (default: meta-llama/Llama-4-Scout-17B-16E-Instruct) |
+## Project Structure
+
+```
+llama-stack-showcase/
+├── app.py                   # HuggingFace Spaces entry point — launches the Gradio UI
+├── requirements.txt
+├── .env.example
+├── assets/
+│   └── infographic.svg
+├── src/
+│   ├── client.py            # Provider-agnostic OpenAI-compatible client
+│   ├── ui.py                # Gradio Blocks UI with 3 tabs and live streaming
+│   ├── history.py           # In-memory run history with export
+│   └── tools/
+│       ├── search.py        # DuckDuckGo web search tool
+│       ├── execute.py       # Sandboxed Python execution tool
+│       └── file_io.py       # Workspace-scoped read/write/list/delete tool
+├── demos/
+│   ├── research_agent.py    # Demo 1
+│   ├── code_agent.py        # Demo 2
+│   └── pipeline_agent.py    # Demo 3
+├── tests/                   # 93 pytest cases
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── API.md
+│   ├── demo_video_script.md
+│   └── huggingface-spaces.md
+└── workspace/               # Sandbox for file I/O and agent output
+```
+
+## Llama Stack vs. Raw API Calls
+
+Raw API calls are fine for a single prompt-in / text-out exchange. Once you need tools, multi-turn reasoning, structured outputs, or deployment parity across providers, you end up rebuilding a large fraction of what Llama Stack already provides — tool registries, agent loops, streaming, and a uniform client surface. This project uses Llama Stack's client layer so you can swap Together AI, OpenRouter, and a local Ollama endpoint by changing a single environment variable.
 
 ## License
 
-MIT License - See [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-Contributions welcome! Please ensure:
-- Code follows PEP 8 style
-- All tests pass (`python -m pytest`)
-- New features include documentation
-
-## Acknowledgments
-
-- [Meta Llama Stack](https://github.com/meta-llama/llama-stack)
-- [Together AI](https://together.ai)
-- [Gradio](https://gradio.app)
+MIT. See `LICENSE`.
